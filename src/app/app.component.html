@@ -1,0 +1,37 @@
+<!--The whole content below can be removed with the new code.-->
+<div style="text-align:center">
+  
+  <div class="container">
+    <div class="row">
+   <!-- <div class="col-xs-4">aa</div>-->
+    <div class="col-xs-12 col-sm-4 col-sm-push-4 col-xs-push-3"  id="imgJDM">
+     <!-- <img src="http://www.jeuxdemots.org/logo-jdm/Logo_JDMrect_fond_transp.png" alt="L'image ne se charge pas !"/>-->
+       <img src="assets/pictures/jdmlogo.png" alt="L'image ne se charge pas !"/>
+    </div>
+    <!--<div class="col-sm-4">aa</div>-->
+  
+    </div>
+    <div class="row">
+     <div class="col-xs-12 col-lg-8">
+
+         <!-- <form class="form-inline pull-left col-xs-12 col-lg-12">-->
+
+            <input id="inputSearch" type="text" class="input-sm pull-left" placeholder="Recherche" [(ngModel)]="value">
+
+            <button id="buttonSearch" type="submit" class="btn btn-primary btn-sm pull-left" (click)="request()"><span class="glyphicon glyphicon-eye-open"></span> Chercher</button>
+
+         <!-- </form>-->
+
+        </div>
+    </div>
+  <div>
+    <ul *ngFor="let def of defs">
+      <li> {{def}}</li>
+      </ul>
+ <!-- {{response}}-->
+</div>
+  </div>
+  
+</div>
+
+

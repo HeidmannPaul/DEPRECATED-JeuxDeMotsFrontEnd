@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+body, html {
+    height: 100%;
+}
+
+body
+{
+    background-image:url("./assets/pictures/greengradient.jpg");
+    background-size: cover;
+    /* permet à l'image en background de s'étirer quand la page se remplit et a une hauteur plus élevée */
+    background-attachment: fixed;    
+}
+/*pour faire un gradient de bleu, mais laisse une bande vide en bas*/
+/*body
+{
+     background: -moz-linear-gradient(120deg, rgba(138,192,255,1) 0%, rgba(207,255,254,1) 100%); 
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(207,255,254,1)), color-stop(100%, rgba(138,192,255,1))); 
+    background: -webkit-linear-gradient(120deg, rgba(138,192,255,1) 0%, rgba(207,255,254,1) 100%); 
+    background: -o-linear-gradient(120deg, rgba(138,192,255,1) 0%, rgba(207,255,254,1) 100%); 
+    background: -ms-linear-gradient(120deg, rgba(138,192,255,1) 0%, rgba(207,255,254,1) 100%); 
+    background: linear-gradient(330deg, rgba(138,192,255,1) 0%, rgba(207,255,254,1) 100%); 
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#CFFFFE', endColorstr='#8AC0FF',GradientType=0 ); 
+    background-size: cover;
+}*/
