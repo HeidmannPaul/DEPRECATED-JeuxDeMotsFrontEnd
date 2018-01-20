@@ -12,7 +12,7 @@ body
     /* permet à l'image en background de s'étirer quand la page se remplit et a une hauteur plus élevée */
     background-attachment: fixed;    
 }
-/*pour faire un gradient de bleu, mais laisse une bande vide en bas*/
+/*pour faire un gradient de bleu*/
 /*body
 {
      background: -moz-linear-gradient(120deg, rgba(138,192,255,1) 0%, rgba(207,255,254,1) 100%); 

@@ -1,9 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {ServiceRequestService} from '../ServiceRequest/service-request.service'
+import { ServiceRequestService } from '../ServiceRequest/service-request.service'
 import { AppComponent } from './app.component';
 import { HttpModule } from '@angular/http';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { AutoCompleteModule } from 'primeng/primeng';
+import { DataTableModule, DialogModule, DropdownModule, SelectItem } from 'primeng/primeng';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 
 
@@ -14,7 +18,12 @@ import {FormsModule} from '@angular/forms';
   imports: [
     BrowserModule,
     HttpModule,
-    FormsModule   
+    FormsModule,
+    AutoCompleteModule,
+    DataTableModule,
+    DialogModule,
+    BrowserAnimationsModule,
+    DropdownModule
   ],
   providers: [ServiceRequestService],
   bootstrap: [AppComponent]

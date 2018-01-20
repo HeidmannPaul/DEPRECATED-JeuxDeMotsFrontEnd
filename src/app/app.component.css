@@ -22,7 +22,8 @@ img
         height:40px;
     }
 
-    #inputSearch
+    /*#inputSearch*/
+    .p-autocomplete
     {
         width: 60%;
         margin-left: 5%;
@@ -38,7 +39,8 @@ img
         width:33%;
         height:80px;
     }
-#inputSearch
+/*#inputSearch*/
+.p-autocomplete
     {
         width: 70%;
     }
