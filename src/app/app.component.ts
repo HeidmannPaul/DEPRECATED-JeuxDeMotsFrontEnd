@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { AutoCompleteModule, DataTableModule, SharedModule, DialogModule, SelectItem } from 'primeng/primeng';
 
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -26,7 +25,7 @@ export class AppComponent implements OnInit {
   rows: any[] = [];
   legend: String = "";
 
-  //permettra d'afficher la fenetre de dialogue en le mettant a true 
+  //permettra d'afficher la fenetre de dialogue en le mettant à true 
   display: boolean = false;
 
   allEntities: any[] = [];
@@ -36,6 +35,9 @@ export class AppComponent implements OnInit {
 
   options: SelectItem[];
   dropdownValue: any = "entities";
+
+  //contiendra le mot relatif à la ligne sélectionnée
+  wordSelected: any = null;
 
 
 
@@ -65,9 +67,18 @@ export class AppComponent implements OnInit {
 
   }
 
-  request() {
+  /*on met un paramètre optionnel, et s'il est défini c'est que la méthode a été
+  appelée par le bouton affiché quand un clique sur une ligne de type Entité
+*/
+  request(wordSelected? :any) {
     if (this.value.word) {
       this.value = this.value.word;
+    }
+    else if(wordSelected)
+    {
+      this.value=wordSelected;
+      this.display=false;
+      console.log("BIEN ICI")
     }
     if (this.value) {
       /*
@@ -75,12 +86,13 @@ export class AppComponent implements OnInit {
       */
 
       this.getData.getValue(this.value).subscribe(res => {
+        //console.log("réponse recue",res);
         this.response = res._body;
-        console.log("this.value dessus", this.value)
+        // console.log("this.value dessus", this.value)
         //this.cookieService.set(this.value, res._body);
 
         this.orderDefsEntitiesRelations();
-        this.value="";
+        this.value = "";
       }, err => {
         console.log("err", err)
       });
@@ -143,7 +155,7 @@ export class AppComponent implements OnInit {
     } if (leavingRelations) {
       if (leavingRelations[0]) {
         this.allLeavingRelations = leavingRelations[0].split("\n");
-        console.log("leavingRelations", leavingRelations)
+        // console.log("leavingRelations", leavingRelations)
       }
       if (leavingRelations[1]) {
 
@@ -171,7 +183,20 @@ export class AppComponent implements OnInit {
 
   }
 
-  displayDialogEntity() {
+  displayDialogEntity(event) {
+    //console.log("VALUE EVENT",event);
+    console.log("EVENT: ", event);
+    if(this.dropdownValue=="entities")
+    {
+      this.wordSelected=event.data.name;
+      console.log("word selected: ", this.wordSelected)
+      if(this.wordSelected[0]=="'")
+      {
+        console.log("OKOKOK");
+        this.wordSelected = this.wordSelected.split("'")[1];
+        console.log("wordSelected after split :",this.wordSelected)
+      }
+    }
     this.display = true;
   }
 
