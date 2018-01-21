@@ -43,7 +43,7 @@
     <!-- {{response}}-->
   </div>
   <div>
-    <p-dataTable [value]="rows" [rows]="20" [paginator]="true" scrollable="true" selectionMode="single" (onRowSelect)="displayDialogEntity()">
+    <p-dataTable [value]="rows" [rows]="20" [paginator]="true" scrollable="true" selectionMode="single" (onRowSelect)="displayDialogEntity($event)">
       <p-header>
         <div style="text-align:left">
 
@@ -54,7 +54,19 @@
       <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" sortable="custom" (sortFunction)="mysort($event)"></p-column>
 
     </p-dataTable>
-    <p-dialog header="Informations supplémentaires" [(visible)]="display" modal="modal" ></p-dialog>
+    <p-dialog header="Informations supplémentaires" [(visible)]="display" modal="modal" >
+      <div *ngIf="dropdownValue=='entities';then thenBlock; else elseBlock"></div>
+      <ng-template #thenBlock>
+        <div>
+ 
+          <button class="btn btn-primary btn-sm" (click)="request(wordSelected)">Rechercher : {{wordSelected}} ?</button>
+        </div>
+      </ng-template>
+      <ng-template #elseBlock>
+        <div>Dans le reste</div>
+      </ng-template>
+
+    </p-dialog>
 
     <!--{{relations}} -->
 
