@@ -39,6 +39,13 @@ export class AppComponent implements OnInit {
   //contiendra le mot relatif à la ligne sélectionnée
   wordSelected: any = null;
 
+  relationTypes: SelectItem[];
+
+  //utilisé pour retrouver directement la valeur associée au numéro du type de la relation
+  keyValueRelationTypes: any[] = [];
+
+  //quand on filtre par type de relation, rowsCopy permet de garder l'état initial des réponses
+  rowsCopy: any[] = [];
 
 
   public constructor(private getData: ServiceRequestService) { }
@@ -70,14 +77,13 @@ export class AppComponent implements OnInit {
   /*on met un paramètre optionnel, et s'il est défini c'est que la méthode a été
   appelée par le bouton affiché quand un clique sur une ligne de type Entité
 */
-  request(wordSelected? :any) {
+  request(wordSelected?: any) {
     if (this.value.word) {
       this.value = this.value.word;
     }
-    else if(wordSelected)
-    {
-      this.value=wordSelected;
-      this.display=false;
+    else if (wordSelected) {
+      this.value = wordSelected;
+      this.display = false;
       console.log("BIEN ICI")
     }
     if (this.value) {
@@ -130,6 +136,7 @@ export class AppComponent implements OnInit {
 
     //déclenché quand on fait une nouvelle recherche, on réinitialise donc le tableau
     this.rows = [];
+    this.rowsCopy = [];
 
     let firstPart: any[] = null;
     let entities: any[] = null;
@@ -143,11 +150,33 @@ export class AppComponent implements OnInit {
         entities = firstPart[0].split("// les noeuds/termes (Entries) : e;eid;'name';type;w;'formated name'");
       } if (firstPart[1]) {
         relationsTypes = firstPart[1].split("// les relations sortantes : r;rid;node1;node2;type;w");
+
       }
     }
     if (relationsTypes) {
       if (relationsTypes[0]) {
         this.allRelationsTypes = relationsTypes[0].split("\n");
+
+        //ces types de relations ne sont pas indiqués dans les réponses, il faut les ajouter à la main
+        //this.allRelationsTypes.push("rt;1;'r_raff_sem';raffinement semantique;Raffinement sémantique vers un usage particulier du terme source")
+        //this.allRelationsTypes.push("rt;2;'r_raff_morpho';raffinement morphologique;Raffinement morphologique vers un usage particulier du terme source")
+
+        console.log("allrelationstypes", this.allRelationsTypes)
+        this.relationTypes = [];
+        this.allRelationsTypes.forEach((element, index) => {
+          ///////////
+
+
+          let tab: any[] = element.split(";");
+          if (tab.length > 4) {
+            this.relationTypes.push(
+              { label: tab[2], value: tab[1] }
+            )
+            this.keyValueRelationTypes[tab[1]] = tab[2];
+
+          }
+        })
+        console.log("VALUE RELATIONTYPES: ", this.relationTypes)
       } if (relationsTypes[1]) {
 
         leavingRelations = relationsTypes[1].split("// les relations entrantes : r;rid;node1;node2;type;w");
@@ -186,15 +215,13 @@ export class AppComponent implements OnInit {
   displayDialogEntity(event) {
     //console.log("VALUE EVENT",event);
     console.log("EVENT: ", event);
-    if(this.dropdownValue=="entities")
-    {
-      this.wordSelected=event.data.name;
+    if (this.dropdownValue == "entities") {
+      this.wordSelected = event.data.name;
       console.log("word selected: ", this.wordSelected)
-      if(this.wordSelected[0]=="'")
-      {
+      if (this.wordSelected[0] == "'") {
         console.log("OKOKOK");
         this.wordSelected = this.wordSelected.split("'")[1];
-        console.log("wordSelected after split :",this.wordSelected)
+        console.log("wordSelected after split :", this.wordSelected)
       }
     }
     this.display = true;
@@ -203,6 +230,7 @@ export class AppComponent implements OnInit {
   displaySelection() {
     //comme on change de sélection, on réinitialise
     this.rows = [];
+
     if (this.dropdownValue == "entities") {
 
       this.cols =
@@ -225,7 +253,8 @@ export class AppComponent implements OnInit {
           this.rows.push({
             ID: tab[1],
             name: tab[2],
-            type: tab[3],
+             type: tab[3],
+            //type: this.keyValueRelationTypes[tab[3]],
             weight: tab[4],
             formatedName: "X"
 
@@ -237,7 +266,9 @@ export class AppComponent implements OnInit {
 
             ID: tab[1],
             name: tab[2],
-            type: tab[3],
+             type: tab[3],
+           // type: this.keyValueRelationTypes[tab[3]],
+
             weight: tab[4],
             formatedName: tab[5]
           })
@@ -303,6 +334,8 @@ export class AppComponent implements OnInit {
             node1: tab[2],
             node2: tab[3],
             type: tab[4],
+            //type: this.keyValueRelationTypes[tab[4]],
+
             weight: tab[5]
           })
         }
@@ -331,7 +364,9 @@ export class AppComponent implements OnInit {
             ID: tab[1],
             node1: tab[2],
             node2: tab[3],
-            type: tab[4],
+             type: tab[4],
+            //type: this.keyValueRelationTypes[tab[4]],
+
             weight: tab[5]
           })
         }
@@ -340,11 +375,14 @@ export class AppComponent implements OnInit {
       this.rows = [...this.rows]
       this.legend = "";
     }
+    this.rowsCopy = this.rows;
 
   }
 
   mysort(event) {
     //par défaut le sort de p-datatable utilise l'ordre alphanumérique sur les chiffres, donc 9>80, il faut donc changer le tri
+    console.log(event)
+
     if (event.field == "ID" || event.field == "type" || event.field == "weight" || event.field == "node1" || event.field == "node2") {
 
       let intComparison = function (val1, val2) {
@@ -377,6 +415,7 @@ export class AppComponent implements OnInit {
         Si on fait juste un val1>val2, alors "é" est avant a. Avec localeCompare
         il est entre "d" et "e"
         */
+        console.log("val1val2",val1,val2)
         if (event.order == 1) {
           if (val1[event.field].toLowerCase().localeCompare(val2[event.field].toLowerCase(), "fr") > 0) return -1; else return 1;
         }
@@ -459,6 +498,7 @@ export class AppComponent implements OnInit {
         this.defs = [];
         this.defs.push("Aucune donnée...")
         this.rows = [];
+        this.rowsCopy = [];
         this.allEntities = [];
         this.allRelationsTypes = [];
         this.allLeavingRelations = [];
@@ -473,6 +513,7 @@ export class AppComponent implements OnInit {
       this.defs = [];
       this.defs.push("Aucune donnée...")
       this.rows = [];
+      this.rowsCopy = [];
       this.allEntities = [];
       this.allRelationsTypes = [];
       this.allLeavingRelations = [];
@@ -483,8 +524,18 @@ export class AppComponent implements OnInit {
 
 
 
-  findEntityByRelationId() {
+  filterByRelationTypes(event) {
+    console.log("BIEN DANS FILTER", event);
+    this.rows = [];
+    this.rowsCopy.forEach(element => {
 
+      //on check si les valeurs sélectionnées contiennent le type de l'élément sur lequel on itère
+      if (event.value.includes(element.type)) {
+        this.rows.push(element);
+      }
+
+
+    })
   }
 
 }

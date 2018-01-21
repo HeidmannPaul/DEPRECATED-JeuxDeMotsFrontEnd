@@ -4,8 +4,8 @@ import { ServiceRequestService } from '../ServiceRequest/service-request.service
 import { AppComponent } from './app.component';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
-import { AutoCompleteModule } from 'primeng/primeng';
-import { DataTableModule, DialogModule, DropdownModule, SelectItem } from 'primeng/primeng';
+import { AutoCompleteModule, Listbox } from 'primeng/primeng';
+import { DataTableModule, DialogModule, DropdownModule, SelectItem, MultiSelectModule} from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
@@ -23,7 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     DataTableModule,
     DialogModule,
     BrowserAnimationsModule,
-    DropdownModule
+    DropdownModule,
+    MultiSelectModule
   ],
   providers: [ServiceRequestService],
   bootstrap: [AppComponent]

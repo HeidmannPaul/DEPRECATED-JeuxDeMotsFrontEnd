@@ -49,16 +49,21 @@
 
           <p>{{legend}}</p>
           <p-dropdown [options]="options" [(ngModel)]="dropdownValue" (onChange)="displaySelection()"></p-dropdown>
+          <div *ngIf="dropdownValue=='entities' || dropdownValue=='incomingRelations' || dropdownValue=='leavingRelations'">
+            
+              <p-multiSelect [options]="relationTypes" defaultLabel="Choix des types de relations" (onChange)="filterByRelationTypes($event)"></p-multiSelect>
+            
+          </div>
         </div>
       </p-header>
       <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" sortable="custom" (sortFunction)="mysort($event)"></p-column>
 
     </p-dataTable>
-    <p-dialog header="Informations supplémentaires" [(visible)]="display" modal="modal" >
+    <p-dialog header="Informations supplémentaires" [(visible)]="display" modal="modal">
       <div *ngIf="dropdownValue=='entities';then thenBlock; else elseBlock"></div>
       <ng-template #thenBlock>
         <div>
- 
+
           <button class="btn btn-primary btn-sm" (click)="request(wordSelected)">Rechercher : {{wordSelected}} ?</button>
         </div>
       </ng-template>
