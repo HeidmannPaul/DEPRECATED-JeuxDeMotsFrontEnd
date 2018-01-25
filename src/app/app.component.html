@@ -49,28 +49,47 @@
 
           <p>{{legend}}</p>
           <p-dropdown [options]="options" [(ngModel)]="dropdownValue" (onChange)="displaySelection()"></p-dropdown>
-          <div *ngIf="dropdownValue=='entities' || dropdownValue=='incomingRelations' || dropdownValue=='leavingRelations'">
-            
-              <p-multiSelect [options]="relationTypes" defaultLabel="Choix des types de relations" (onChange)="filterByRelationTypes($event)"></p-multiSelect>
-            
+          <div *ngIf="dropdownValue=='incomingRelations' || dropdownValue=='leavingRelations'">
+
+            <p-multiSelect [options]="relationTypes" defaultLabel="Choix des types de relations" (onChange)="filterByRelationTypes($event)"></p-multiSelect>
+
           </div>
+          <div *ngIf="dropdownValue=='entities'">
+
+            <p-multiSelect [options]="entitiesTypes" defaultLabel="Choix des types d'entités" (onChange)="filterByEntityTypes($event)"></p-multiSelect>
+
+          </div>
+
         </div>
       </p-header>
       <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" sortable="custom" (sortFunction)="mysort($event)"></p-column>
 
     </p-dataTable>
     <p-dialog header="Informations supplémentaires" [(visible)]="display" modal="modal">
-      <div *ngIf="dropdownValue=='entities';then thenBlock; else elseBlock"></div>
+      <div *ngIf="dropdownValue=='entities';then thenBlock"></div>
       <ng-template #thenBlock>
         <div>
 
           <button class="btn btn-primary btn-sm" (click)="request(wordSelected)">Rechercher : {{wordSelected}} ?</button>
         </div>
       </ng-template>
-      <ng-template #elseBlock>
-        <div>Dans le reste</div>
-      </ng-template>
+      <div *ngIf="dropdownValue=='incomingRelations' || dropdownValue=='leavingRelations';then thenBlockRel"></div>
+      <ng-template #thenBlockRel>
+        <!-- <div>Dans le reste</div>-->
 
+        <p-dataTable [value]="rowsDialog" [rows]="20" [paginator]="true" scrollable="true" selectionMode="single">
+          <p-header>
+            <div style="text-align:left">
+
+              <p>{{legendDialog}}</p>
+              <p-dropdown [options]="optionsDialog" [(ngModel)]="dropdownValueDialog" (onChange)="displaySelectionForDialog()"></p-dropdown>
+            </div>
+          </p-header>
+          <p-column *ngFor="let col of colsDialog" [field]="col.field" [header]="col.header"></p-column>
+
+        </p-dataTable>
+
+      </ng-template>
     </p-dialog>
 
     <!--{{relations}} -->
