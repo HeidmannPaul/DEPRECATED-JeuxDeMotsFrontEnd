@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ServiceRequestService } from "../ServiceRequest/service-request.service";
 import { Router } from "@angular/router";
-import { AutoCompleteModule, DataTableModule, SharedModule, DialogModule, SelectItem } from 'primeng/primeng';
+import { AutoCompleteModule, DataTableModule, SharedModule, DialogModule, SelectItem, DataTable } from 'primeng/primeng';
 
 
 @Component({
@@ -134,6 +134,7 @@ export class AppComponent implements OnInit {
         this.response = res._body;
         //this.cookieService.set(this.value, res._body);
 
+
         this.orderDefsEntitiesRelations();
         this.value = "";
       }, err => {
@@ -158,7 +159,6 @@ export class AppComponent implements OnInit {
       //this.cookieService.set(this.value, res._body);
 
       let allRelations = res._body.split("</def>")[1];
-      console.log("allRelations:::", allRelations)
 
       this.orderRelationsForDialog(allRelations);
       // this.orderDefsEntitiesRelationsForRelationReference();
@@ -200,6 +200,7 @@ export class AppComponent implements OnInit {
   //tous les if car il peut manquer certains éléments dans les réponses, comme pour le mot main
   orderRelations(allRelations) {
 
+    console.log("calleddd")
     //déclenché quand on fait une nouvelle recherche, on réinitialise donc le tableau
     this.rows = [];
     this.rowsCopy = [];
@@ -227,7 +228,6 @@ export class AppComponent implements OnInit {
         //this.allRelationsTypes.push("rt;1;'r_raff_sem';raffinement semantique;Raffinement sémantique vers un usage particulier du terme source")
         //this.allRelationsTypes.push("rt;2;'r_raff_morpho';raffinement morphologique;Raffinement morphologique vers un usage particulier du terme source")
 
-        // console.log("allrelationstypes", this.allRelationsTypes)
         this.relationTypes = [];
         this.allRelationsTypes.forEach((element, index) => {
           ///////////
@@ -270,7 +270,7 @@ export class AppComponent implements OnInit {
         this.allEntities.forEach(element => {
           let tab = element.split(";");
           if (tab.length >= 5) {
-            this.keyValueEntityId[tab[1]] = tab[2];
+            this.keyValueEntityId[tab[1]] = this.removeQuotes(tab[2]);
 
           }
         })
@@ -379,7 +379,7 @@ export class AppComponent implements OnInit {
         this.allEntitiesForDialog.forEach(element => {
           let tab = element.split(";");
           if (tab.length >= 5) {
-            this.keyValueEntityIdForDialog[tab[1]] = tab[2];
+            this.keyValueEntityIdForDialog[tab[1]] = this.removeQuotes(tab[2]);
 
           }
         })
@@ -425,24 +425,17 @@ export class AppComponent implements OnInit {
 
 
   displayDialogEntity(event) {
-    console.log(event)
     if (this.dropdownValue == "entities") {
-
       this.wordSelected = event.data.name;
-      console.log("word selected: ", this.wordSelected)
       if (this.wordSelected[0] == "'") {
         this.wordSelected = this.wordSelected.split("'")[1];
-        console.log("wordSelected after split :", this.wordSelected)
       }
       this.display = true;
 
     }
     else if (this.dropdownValue == "leavingRelations") {
-      let word = event.data.node2.split("'");
-      //pour le cas où y'a pas de quotes entre la relation
-      if (word.length > 1) {
-        word = word[1];
-      }
+
+      let word = event.data.node2;
 
       if (word[0] == ":" && word[1] == "r") {
 
@@ -450,14 +443,16 @@ export class AppComponent implements OnInit {
         this.requestForRelationReference(word);
         this.display = true;
 
+      }
+      else {
+        this.isRelationReference = false;
+        this.wordSelected = word;
+        this.display = true;
       }
     }
-    else if (this.dropdownValue == "leavingRelations") {
-      let word = event.data.node1.split("'");
-      //pour le cas où y'a pas de quotes entre la relation
-      if (word.length > 1) {
-        word = word[1];
-      }
+    else if (this.dropdownValue == "incomingRelations") {
+
+      let word = event.data.node1;
 
       if (word[0] == ":" && word[1] == "r") {
 
@@ -465,12 +460,18 @@ export class AppComponent implements OnInit {
         this.requestForRelationReference(word);
         this.display = true;
 
-      
+
+      }
+      else {
+        this.isRelationReference = false;
+        this.wordSelected = word;
+        this.display = true;
       }
     }
     //this.display = true;
   }
 
+  //appelée lors du changement du dropdown mais aussi à l'initialisation
   displaySelection() {
     //comme on change de sélection, on réinitialise
     this.rows = [];
@@ -479,7 +480,7 @@ export class AppComponent implements OnInit {
 
       this.cols =
         [
-        //  { field: 'ID', header: 'ID' },
+          //  { field: 'ID', header: 'ID' },
           { field: 'name', header: 'Name' },
           { field: 'type', header: 'Type' },
           { field: 'weight', header: 'Weight' },
@@ -496,7 +497,7 @@ export class AppComponent implements OnInit {
         if (tab.length == 5) {
           this.rows.push({
             ID: tab[1],
-            name: tab[2],
+            name: this.removeQuotes(tab[2]),
             type: tab[3],
             //type: this.keyValueRelationTypes[tab[3]],
             weight: tab[4],
@@ -509,7 +510,7 @@ export class AppComponent implements OnInit {
 
 
             ID: tab[1],
-            name: tab[5],
+            name: this.removeQuotes(tab[5]),
             type: tab[3],
             // type: this.keyValueRelationTypes[tab[3]],
 
@@ -674,7 +675,7 @@ export class AppComponent implements OnInit {
         if (tab.length == 5) {
           this.rowsDialog.push({
             ID: tab[1],
-            name: tab[2],
+            name: this.removeQuotes(tab[2]),
             type: tab[3],
             //type: this.keyValueRelationTypes[tab[3]],
             weight: tab[4],
@@ -687,7 +688,7 @@ export class AppComponent implements OnInit {
 
 
             ID: tab[1],
-            name: tab[5],
+            name: this.removeQuotes(tab[5]),
             type: tab[3],
             // type: this.keyValueRelationTypes[tab[3]],
 
@@ -704,7 +705,6 @@ export class AppComponent implements OnInit {
     }
     else if (this.dropdownValueDialog == "relationType") {
 
-      console.log("bien changé reltype")
       this.colsDialog =
         [
           //{ field: 'ID', header: 'ID' },
@@ -738,7 +738,6 @@ export class AppComponent implements OnInit {
 
     }
     else if (this.dropdownValueDialog == "incomingRelations") {
-      console.log("bien changé incoming")
 
       this.colsDialog =
         [
@@ -783,7 +782,6 @@ export class AppComponent implements OnInit {
       this.legendDialog = "";
     }
     else if (this.dropdownValueDialog == "leavingRelations") {
-      console.log("bien changé leaving")
 
       this.colsDialog =
         [
@@ -988,6 +986,23 @@ export class AppComponent implements OnInit {
         this.rows.push(element);
       }
     })
+  }
+
+
+  // on réinitialise le filtre quand on change la valeur du dropdown (celle n'est
+  //pas implicitement pris en charge pas primeNG
+  //dt.filteredValue contient l'ensemble des valeurs filtrées (on remet donc toutes les lignes si on change la valeur du dropdown)
+  //dt.filters est un objet contenant chaque colonne filtrée, on réinitialise donc l'objet
+  resetFilter(dt: DataTable) {
+    dt.filteredValue = [...this.rowsCopy];
+    dt.filters = {}
+  }
+
+  //fonction pour retirer les quotes autour des certaines valeurs 
+  removeQuotes(s: String): any {
+
+    return s.substring(1, s.length - 1);
+
   }
 
 }

@@ -43,12 +43,12 @@
     <!-- {{response}}-->
   </div>
   <div>
-    <p-dataTable [value]="rows" [rows]="20" [paginator]="true" scrollable="true" selectionMode="single" (onRowSelect)="displayDialogEntity($event)">
+    <p-dataTable #dt [value]="rows" [rows]="20" [paginator]="true" scrollable="true" selectionMode="single" (onRowSelect)="displayDialogEntity($event)">
       <p-header>
         <div style="text-align:left">
 
           <p>{{legend}}</p>
-          <p-dropdown [options]="options" [(ngModel)]="dropdownValue" (onChange)="displaySelection()"></p-dropdown>
+          <p-dropdown [options]="options" [(ngModel)]="dropdownValue" (onChange)="displaySelection(); resetFilter(dt)"></p-dropdown>
           <div *ngIf="dropdownValue=='incomingRelations' || dropdownValue=='leavingRelations'">
 
             <p-multiSelect [options]="relationTypes" defaultLabel="Choix des types de relations" (onChange)="filterByRelationTypes($event)"></p-multiSelect>
@@ -62,7 +62,8 @@
 
         </div>
       </p-header>
-      <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" sortable="custom" (sortFunction)="mysort($event)"></p-column>
+      <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" sortable="custom" (sortFunction)="mysort($event)"
+        [filter]="true"></p-column>
 
     </p-dataTable>
     <p-dialog header="Informations supplémentaires" [(visible)]="display" modal="modal">
@@ -76,19 +77,26 @@
       <div *ngIf="dropdownValue=='incomingRelations' || dropdownValue=='leavingRelations';then thenBlockRel"></div>
       <ng-template #thenBlockRel>
         <!-- <div>Dans le reste</div>-->
+        <div *ngIf="isRelationReference==false">
+          <div>
 
-        <p-dataTable [value]="rowsDialog" [rows]="20" [paginator]="true" scrollable="true" selectionMode="single">
-          <p-header>
-            <div style="text-align:left">
+            <button class="btn btn-primary btn-sm" (click)="request(wordSelected)">Rechercher : {{wordSelected}} ?</button>
+          </div>
+        </div>
+        <div *ngIf="isRelationReference==true">
 
-              <p>{{legendDialog}}</p>
-              <p-dropdown [options]="optionsDialog" [(ngModel)]="dropdownValueDialog" (onChange)="displaySelectionForDialog()"></p-dropdown>
-            </div>
-          </p-header>
-          <p-column *ngFor="let col of colsDialog" [field]="col.field" [header]="col.header"></p-column>
+          <p-dataTable [value]="rowsDialog" [rows]="20" [paginator]="true" scrollable="true" selectionMode="single">
+            <p-header>
+              <div style="text-align:left">
 
-        </p-dataTable>
+                <p>{{legendDialog}}</p>
+                <p-dropdown [options]="optionsDialog" [(ngModel)]="dropdownValueDialog" (onChange)="displaySelectionForDialog()"></p-dropdown>
+              </div>
+            </p-header>
+            <p-column *ngFor="let col of colsDialog" [field]="col.field" [header]="col.header"></p-column>
 
+          </p-dataTable>
+        </div>
       </ng-template>
     </p-dialog>
 
