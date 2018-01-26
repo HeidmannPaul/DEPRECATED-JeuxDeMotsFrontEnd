@@ -133,7 +133,8 @@ export class AppComponent implements OnInit {
       /*
       this.value de la forme : {_id: "5a5100e4ea180a6f10082d6d", word: "caillou", coeff: 6.45}
       */
-      if(this.relation.length==0){
+      console.log("this.relation.length",this.relation)
+      if(this.relation==null){
       this.getData.getValue(this.value).subscribe(res => {
         this.response = res._body;
         //this.cookieService.set(this.value, res._body);
@@ -150,7 +151,7 @@ export class AppComponent implements OnInit {
     }else{
       let stringRel="";
       this.relation.forEach(element => {
-        stringRel+=element.rel_name+",";
+        stringRel+=element.rel_id+",";
       });
       stringRel=stringRel.substr(0,stringRel.length-1);
       
@@ -162,6 +163,7 @@ export class AppComponent implements OnInit {
 
       this.orderDefsEntitiesRelations();
       this.value = "";
+      this.relation=[];
     }, err => {
       console.log("err", err)
     });

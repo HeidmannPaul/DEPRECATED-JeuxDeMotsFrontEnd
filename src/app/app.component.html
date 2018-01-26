@@ -89,6 +89,28 @@
 
           <button class="btn btn-primary btn-sm" (click)="request(wordSelected)">Rechercher : {{wordSelected}} ?</button>
         </div>
+        <div clas="row">
+            
+          <p-autoComplete [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" class="input-xs pull-left col-sm-6 col-xs-6 col-lg-8"
+          [(ngModel)]="relation" [suggestions]="suggestionsRel" (completeMethod)="autoCompletionRel($event)" placeholder="Type de Relations" multiple="true"
+          forceSelection="true" [immutable]="false" field="rel_name"></p-autoComplete>
+        
+            <a href="http://www.jeuxdemots.org/jdm-about-detail-relations.php" target="_blank" class="btn btn-info btn-sm pull-right col-sm-2 col-xs-4 col-lg-2" role="button" aria-pressed="true">
+              <span class=" glyphicon glyphicon-new-window"></span> 
+              Types disponibles
+            </a>
+  
+              
+  
+  </div>
+      </div>
+      
+      <div *ngIf="isEnumerated; then enumerated; else notEnumerated"></div>
+      <ng-template #enumerated>
+  
+        <ul *ngFor="let def of defs">
+          <li> {{def}}</li>
+        </ul>
       </ng-template>
       <div *ngIf="dropdownValue=='incomingRelations' || dropdownValue=='leavingRelations';then thenBlockRel"></div>
       <ng-template #thenBlockRel>

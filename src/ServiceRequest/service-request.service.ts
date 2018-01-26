@@ -29,6 +29,19 @@ export class ServiceRequestService {
     let observable = this.http.get(url).map((res:Response)=> res.json());
     return observable;
   }
+  getValueByIdRelations(paramValue: any,paramRel:any): Observable<any> {
+    let url = "http://localhost:8888/id/" + paramValue+"/Rel/"+paramRel;
+    var headers = new Headers();
+    let observable = this.http.get(url);//.map((res:Response)=> res.toString());
+    return observable;
+  }
+
+  getRelationComplete(param: any): Observable<any> {
+    let url = "http://localhost:8888/Rel/" + param;
+    var headers = new Headers();
+    let observable = this.http.get(url).map((res:Response)=> res.json());
+    return observable;
+  }
 
   getRelationComplete(param: any): Observable<any> {
    
