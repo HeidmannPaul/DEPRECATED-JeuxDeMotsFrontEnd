@@ -11,11 +11,14 @@ import { AutoCompleteModule, DataTableModule, SharedModule, DialogModule, Select
 })
 export class AppComponent implements OnInit {
   value: any = null;
+  relation: any[] = null;
   formerValueLength: any = null;
+  formerRelLength: any = null;
   response: any = null;
   defs: any[] = [];
   isEnumerated: boolean = true;
   suggestions: any[] = [];
+  suggestionsRel: any[] = [];
 
   //allRelations: any = null;
   relations: any[] = [];
@@ -79,18 +82,19 @@ export class AppComponent implements OnInit {
 */
   request(wordSelected?: any) {
     if (this.value.word) {
-      this.value = this.value.word;
+      this.value = this.value.word.toLowerCase();
     }
     else if (wordSelected) {
-      this.value = wordSelected;
+      this.value = wordSelected.toLowerCase();
       this.display = false;
       console.log("BIEN ICI")
     }
+    
     if (this.value) {
       /*
       this.value de la forme : {_id: "5a5100e4ea180a6f10082d6d", word: "caillou", coeff: 6.45}
       */
-
+      if(this.relation.length==0){
       this.getData.getValue(this.value).subscribe(res => {
         //console.log("réponse recue",res);
         this.response = res._body;
@@ -105,7 +109,26 @@ export class AppComponent implements OnInit {
       //("res", res)
 
       // }
+    }else{
+      let stringRel="";
+      this.relation.forEach(element => {
+        stringRel+=element.rel_name+",";
+      });
+      stringRel=stringRel.substr(0,stringRel.length-1);
+      
+      this.getData.getValueByIdRelations(this.value,stringRel).subscribe(res => {
+      //console.log("réponse recue",res);
+      this.response = res._body;
+      // console.log("this.value dessus", this.value)
+      //this.cookieService.set(this.value, res._body);
+
+      this.orderDefsEntitiesRelations();
+      this.value = "";
+    }, err => {
+      console.log("err", err)
+    });
     }
+   }
   }
 
   autoCompletionQuery(event) {
@@ -114,13 +137,18 @@ export class AppComponent implements OnInit {
     {
       this.suggestions=[];
     }*/
-    this.formerValueLength = this.value.length
+    console.log("event",event,this.value);
+    console.log(this.value);
+    this.formerValueLength = this.value.length;
+    
     let values = this.getData.getAutoComplete(this.value).subscribe(res => {
       /*
       [...res] créé une nouvelle référence, sans ca, ca ne fonctionne pas avec le code commenté ci dessous
       voir spread functions sur internet 
       */
-      this.suggestions = [...res];
+      
+      console.log("ici",res);
+      this.suggestions =[...res];
       let i = 0;
       /* res.forEach(element => {
          this.suggestions[i] = element.word;
@@ -129,6 +157,28 @@ export class AppComponent implements OnInit {
 
 
     })
+  
+  }
+
+  autoCompletionRel(event) {
+
+    /*if(this.value.length==1 && this.formerValueLength==0)
+    {
+      this.suggestions=[];
+    }*/
+    console.log("event",event,this.relation);
+    console.log(this.relation);
+    
+    let values = this.getData.getRelationComplete(event.query).subscribe(res => {
+      /*
+      [...res] créé une nouvelle référence, sans ca, ca ne fonctionne pas avec le code commenté ci dessous
+      voir spread functions sur internet 
+      */
+      this.suggestionsRel =[...res];
+
+
+    })
+  
   }
 
   //tous les if car il peut manquer certains éléments dans les réponses, comme pour le mot main
@@ -537,7 +587,4 @@ export class AppComponent implements OnInit {
 
     })
   }
-
 }
-
-
