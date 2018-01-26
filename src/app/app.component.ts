@@ -113,7 +113,7 @@ export class AppComponent implements OnInit {
     }else{
       let stringRel="";
       this.relation.forEach(element => {
-        stringRel+=element.rel_name+",";
+        stringRel+=element.rel_id+",";
       });
       stringRel=stringRel.substr(0,stringRel.length-1);
       
