@@ -1,80 +1,96 @@
 <!--The whole content below can be removed with the new code.-->
 <div style="text-align:center">
 
-  <div class="container">
-    <div class="row">
-      <!-- <div class="col-xs-4">aa</div>-->
-      <div class="col-xs-12 col-sm-4 col-sm-push-4 col-xs-push-3" id="imgJDM">
-        <!-- <img src="http://www.jeuxdemots.org/logo-jdm/Logo_JDMrect_fond_transp.png" alt="L'image ne se charge pas !"/>-->
-        <img src="assets/pictures/jdmlogo.png" alt="L'image ne se charge pas !" />
+    <div class="container">
+      <div class="row">
+        <!-- <div class="col-xs-4">aa</div>-->
+        <div class="col-xs-12 col-sm-4 col-sm-push-4 col-xs-push-3" id="imgJDM">
+          <!-- <img src="http://www.jeuxdemots.org/logo-jdm/Logo_JDMrect_fond_transp.png" alt="L'image ne se charge pas !"/>-->
+          <img src="assets/pictures/jdmlogo.png" alt="L'image ne se charge pas !" />
+        </div>
+        <!--<div class="col-sm-4">aa</div>-->
+  
       </div>
-      <!--<div class="col-sm-4">aa</div>-->
-
-    </div>
-    <div class="row">
-      <div class="col-xs-12 col-lg-8">
-
-        <!-- <form class="form-inline pull-left col-xs-12 col-lg-12">-->
-
-        <!-- <input id="inputSearch" type="text" class="input-sm pull-left" placeholder="Recherche" [(ngModel)]="value" (keyup)="autoCompletionQuery()" >-->
-        <p-autoComplete [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" class="input-xs pull-left col-sm-6 col-xs-6 col-lg-10"
-          [(ngModel)]="value" [suggestions]="suggestions" (completeMethod)="autoCompletionQuery($event)" placeholder="Recherche"
-          [immutable]="false" field="word"></p-autoComplete>
-
-        <button id="buttonSearch" type="submit" class="btn btn-primary btn-sm pull-left col-sm-2 col-xs-4 col-lg-2" (click)="request()">
-          <span class="glyphicon glyphicon-eye-open"></span> Chercher</button>
-
-        <!-- </form>-->
-
-      </div>
-    </div>
-    <div *ngIf="isEnumerated; then enumerated; else notEnumerated"></div>
-    <ng-template #enumerated>
-
-      <ul *ngFor="let def of defs">
-        <li> {{def}}</li>
-      </ul>
-    </ng-template>
-    <ng-template #notEnumerated>
-      <p *ngFor="let def of defs">
-        {{def}}
-        <br/>
-    </ng-template>
-    <!-- {{response}}-->
+      <div class="row">
+        <div class="col-xs-12 col-lg-8">
+  
+          <!-- <form class="form-inline pull-left col-xs-12 col-lg-12">-->
+  
+          <!-- <input id="inputSearch" type="text" class="input-sm pull-left" placeholder="Recherche" [(ngModel)]="value" (keyup)="autoCompletionQuery()" >-->
+          <p-autoComplete [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" class="input-xs pull-left col-sm-6 col-xs-6 col-lg-10"
+            [(ngModel)]="value" [suggestions]="suggestions" (completeMethod)="autoCompletionQuery($event)" placeholder="Recherche" 
+            [immutable]="false" field="word"></p-autoComplete>
+  
+          <button id="buttonSearch" type="submit" class="btn btn-primary btn-sm pull-left col-sm-2 col-xs-4 col-lg-2" (click)="request()">
+            <span class="glyphicon glyphicon-eye-open"></span> Chercher</button>
+           
+          
+          <!-- </form>-->
+  
+        </div>
+        <div clas="row">
+            
+          <p-autoComplete [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" class="input-xs pull-left col-sm-6 col-xs-6 col-lg-8"
+          [(ngModel)]="relation" [suggestions]="suggestionsRel" (completeMethod)="autoCompletionRel($event)" placeholder="Type de Relations" multiple="true"
+          forceSelection="true" [immutable]="false" field="rel_name"></p-autoComplete>
+        
+            <a href="http://www.jeuxdemots.org/jdm-about-detail-relations.php" target="_blank" class="btn btn-info btn-sm pull-right col-sm-2 col-xs-4 col-lg-2" role="button" aria-pressed="true">
+              <span class=" glyphicon glyphicon-new-window"></span> 
+              Types disponibles
+            </a>
+  
+              
+  
   </div>
-  <div>
-    <p-dataTable [value]="rows" [rows]="20" [paginator]="true" scrollable="true" selectionMode="single" (onRowSelect)="displayDialogEntity($event)">
-      <p-header>
-        <div style="text-align:left">
-
-          <p>{{legend}}</p>
-          <p-dropdown [options]="options" [(ngModel)]="dropdownValue" (onChange)="displaySelection()"></p-dropdown>
-          <div *ngIf="dropdownValue=='entities' || dropdownValue=='incomingRelations' || dropdownValue=='leavingRelations'">
-            
-              <p-multiSelect [options]="relationTypes" defaultLabel="Choix des types de relations" (onChange)="filterByRelationTypes($event)"></p-multiSelect>
-            
+      </div>
+      
+      <div *ngIf="isEnumerated; then enumerated; else notEnumerated"></div>
+      <ng-template #enumerated>
+  
+        <ul *ngFor="let def of defs">
+          <li> {{def}}</li>
+        </ul>
+      </ng-template>
+      <ng-template #notEnumerated>
+        <p *ngFor="let def of defs">
+          {{def}}
+          <br/>
+      </ng-template>
+      <!-- {{response}}-->
+    </div>
+    <div>
+      <p-dataTable [value]="rows" [rows]="20" [paginator]="true" scrollable="true" selectionMode="single" (onRowSelect)="displayDialogEntity($event)">
+        <p-header>
+          <div style="text-align:left">
+  
+            <p>{{legend}}</p>
+            <p-dropdown [options]="options" [(ngModel)]="dropdownValue" (onChange)="displaySelection()"></p-dropdown>
+            <div *ngIf="dropdownValue=='entities' || dropdownValue=='incomingRelations' || dropdownValue=='leavingRelations'">
+              
+                <p-multiSelect [options]="relationTypes" defaultLabel="Choix des types de relations" (onChange)="filterByRelationTypes($event)"></p-multiSelect>
+              
+            </div>
           </div>
-        </div>
-      </p-header>
-      <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" sortable="custom" (sortFunction)="mysort($event)"></p-column>
-
-    </p-dataTable>
-    <p-dialog header="Informations supplémentaires" [(visible)]="display" modal="modal">
-      <div *ngIf="dropdownValue=='entities';then thenBlock; else elseBlock"></div>
-      <ng-template #thenBlock>
-        <div>
-
-          <button class="btn btn-primary btn-sm" (click)="request(wordSelected)">Rechercher : {{wordSelected}} ?</button>
-        </div>
-      </ng-template>
-      <ng-template #elseBlock>
-        <div>Dans le reste</div>
-      </ng-template>
-
-    </p-dialog>
-
-    <!--{{relations}} -->
-
+        </p-header>
+        <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" sortable="custom" (sortFunction)="mysort($event)"></p-column>
+  
+      </p-dataTable>
+      <p-dialog header="Informations supplémentaires" [(visible)]="display" modal="modal">
+        <div *ngIf="dropdownValue=='entities';then thenBlock; else elseBlock"></div>
+        <ng-template #thenBlock>
+          <div>
+  
+            <button class="btn btn-primary btn-sm" (click)="request(wordSelected)">Rechercher : {{wordSelected}} ?</button>
+          </div>
+        </ng-template>
+        <ng-template #elseBlock>
+          <div>Dans le reste</div>
+        </ng-template>
+  
+      </p-dialog>
+  
+      <!--{{relations}} -->
+  
+    </div>
+  
   </div>
-
-</div>
