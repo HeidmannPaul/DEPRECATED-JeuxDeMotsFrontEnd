@@ -1,5 +1,5 @@
 <!--The whole content below can be removed with the new code.-->
-<div style="text-align:center">
+<div >
 
   <div class="container">
     <div class="row">
@@ -25,27 +25,30 @@
           <span class="glyphicon glyphicon-eye-open"></span> Chercher</button>
 
         <!-- </form>-->
-
       </div>
 
-      <div clas="row">
+    </div>
 
-        <p-autoComplete [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" class="input-xs pull-left col-sm-6 col-xs-6 col-lg-8"
-          [(ngModel)]="relation" [suggestions]="suggestionsRel" (completeMethod)="autoCompletionRel($event)" placeholder="Type de Relations"
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-lg-2">
+
+        <p-autoComplete [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" class="input-xs pull-left col-sm-12 col-xs-12 col-lg-12"
+          [(ngModel)]="relation" [suggestions]="suggestionsRel" (completeMethod)="autoCompletionRel($event)" placeholder="Types relations" 
           multiple="true" forceSelection="true" [immutable]="false" field="rel_name">
         </p-autoComplete>
-  
-        <a href="http://www.jeuxdemots.org/jdm-about-detail-relations.php" target="_blank" class="btn btn-info btn-sm pull-right col-sm-2 col-xs-4 col-lg-2"
-          role="button" aria-pressed="true">
-          <span class=" glyphicon glyphicon-new-window"></span>
-          Types disponibles
-        </a>
-  
-  
-  
       </div>
-      
+      <div class="col-xs-6 col-lg-4 col-sm-6">
+
+      <a href="http://www.jeuxdemots.org/jdm-about-detail-relations.php" target="_blank" class="btn btn-info btn-sm pull-left col-sm-12 col-xs-12 col-lg-12"
+        role="button" aria-pressed="true">
+        <span class=" glyphicon glyphicon-new-window"></span>
+        Types disponibles
+      </a>
+      </div>
+
+
     </div>
+
     <div *ngIf="isEnumerated; then enumerated; else notEnumerated"></div>
     <ng-template #enumerated>
 

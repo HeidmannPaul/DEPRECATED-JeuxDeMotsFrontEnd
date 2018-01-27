@@ -134,7 +134,8 @@ export class AppComponent implements OnInit {
       this.value de la forme : {_id: "5a5100e4ea180a6f10082d6d", word: "caillou", coeff: 6.45}
       */
       console.log("this.relation.length",this.relation)
-      if(this.relation==null){
+      if(this.relation==null || this.relation.length==0 ){
+        
       this.getData.getValue(this.value).subscribe(res => {
         this.response = res._body;
         //this.cookieService.set(this.value, res._body);
@@ -149,6 +150,7 @@ export class AppComponent implements OnInit {
 
       // }
     }else{
+      
       let stringRel="";
       this.relation.forEach(element => {
         stringRel+=element.rel_id+",";
@@ -156,12 +158,14 @@ export class AppComponent implements OnInit {
       stringRel=stringRel.substr(0,stringRel.length-1);
       
       this.getData.getValueByIdRelations(this.value,stringRel).subscribe(res => {
-      //console.log("réponse recue",res);
+    //  console.log("réponse recue",res);
       this.response = res._body;
       // console.log("this.value dessus", this.value)
       //this.cookieService.set(this.value, res._body);
 
       this.orderDefsEntitiesRelations();
+      //console.log("REL:",this.relations)
+
       this.value = "";
       this.relation=[];
     }, err => {
@@ -291,6 +295,7 @@ export class AppComponent implements OnInit {
               { label: tab[2], value: tab[1] }
             )
             this.keyValueRelationTypes[tab[1]] = tab[2];
+            //console.log("KEY VALUE", tab[1],tab[2])
 
           }
         })
@@ -323,6 +328,7 @@ export class AppComponent implements OnInit {
           let tab = element.split(";");
           if (tab.length >= 5) {
             this.keyValueEntityId[tab[1]] = this.removeQuotes(tab[2]);
+            //console.log("ENTITY KEYVALUE", tab[1], this.removeQuotes(tab[2]))
 
           }
         })
@@ -355,6 +361,7 @@ export class AppComponent implements OnInit {
       console.log("valeur entities", entities)
       console.log("valeur allEntities", this.allEntities)*/
     }
+    console.log("GONNA GET CALLED")
     this.displaySelection();
 
 
@@ -529,6 +536,7 @@ export class AppComponent implements OnInit {
     this.rows = [];
 
     if (this.dropdownValue == "entities") {
+      console.log("ENTITY OKOKOKO")
 
       this.cols =
         [
@@ -587,6 +595,7 @@ export class AppComponent implements OnInit {
           { field: 'rthelp', header: 'Help' }
         ]
 
+
       this.allRelationsTypes.forEach(element => {
 
         let tab: any[] = element.split(";");
@@ -612,6 +621,9 @@ export class AppComponent implements OnInit {
 
     }
     else if (this.dropdownValue == "incomingRelations") {
+      console.log("INCOMING OKOKOKO")
+      console.log("ALL INCOMING RELATIONS", this.allIncomingRelations)
+
       this.cols =
         [
           //{ field: 'ID', header: 'ID' },
@@ -886,12 +898,15 @@ export class AppComponent implements OnInit {
   mysort(event) {
     //par défaut le sort de p-datatable utilise l'ordre alphanumérique sur les chiffres, donc 9>80, il faut donc changer le tri
 
+    console.log("SORT",event)
     if (event.field == "ID" || event.field == "type" || event.field == "weight"/* || event.field == "node1" || event.field == "node2"*/) {
 
       let intComparison = function (val1, val2) {
+
         let int1 = parseInt(val1[event.field]);
         let int2 = parseInt(val2[event.field]);
 
+      //  console.log("int 1 int 2", int1,int2)
         if (event.order == 1) {
           if (int1 > int2) return -1; else return 1;
         }
@@ -900,23 +915,29 @@ export class AppComponent implements OnInit {
         }
       }
 
-      this.rows.sort(intComparison);
-      this.rows = [...this.rows]
+      this.rows = [...this.rows.sort(intComparison)]; 
+
+     // this.rows = [...this.rows]
+      console.log(this.rows)
 
 
     }
     else {
       let stringComparison = function (val1, val2) {
 
+        //console.log("STRING COMPARISON")
         /*
         localeCompare permet de faire une comparaison en prenant en compte les accents.
         Si on fait juste un val1>val2, alors "é" est avant a. Avec localeCompare
         il est entre "d" et "e"
         */
         if (event.order == 1) {
+        //  console.log("VAL 1, VAL2", val1, val2, event.field,val1[event.field], val2[event.field])
           if (val1[event.field].toLowerCase().localeCompare(val2[event.field].toLowerCase(), "fr") > 0) return -1; else return 1;
         }
         else {
+          //console.log("VAL 1, VAL2", val1, val2, event.field,val1[event.field], val2[event.field])
+
           if (val1[event.field].toLowerCase().localeCompare(val2[event.field].toLowerCase(), "fr") > 0) return 1; else return -1;
         }
       }
@@ -1046,16 +1067,19 @@ export class AppComponent implements OnInit {
   //dt.filteredValue contient l'ensemble des valeurs filtrées (on remet donc toutes les lignes si on change la valeur du dropdown)
   //dt.filters est un objet contenant chaque colonne filtrée, on réinitialise donc l'objet
   resetFilter(dt: DataTable) {
-    dt.filteredValue = [...this.rowsCopy];
-    dt.filters = {}
+    console.log("datatable",dt)
+  /* dt.filteredValue = [...this.rowsCopy];
+    dt.filters = {}*/
+    dt.reset();
   }
 
   //fonction pour retirer les quotes autour des certaines valeurs 
   removeQuotes(s: String): any {
 
+
     return s.substring(1, s.length - 1);
 
-  }
+  } 
 
 }
 
