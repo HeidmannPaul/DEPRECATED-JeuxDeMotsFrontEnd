@@ -1,5 +1,6 @@
-# Jeuxdemots
+# DEPRECATED Jeuxdemots
 
+This project was an college project and is no longer maintained.
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.3.
 
 ## Development server
